@@ -1,0 +1,147 @@
+PPU-ad990ca2932c0b2a93776a9374c5e28dfaf5051d:
+  June 2014 Patches:
+    Games:
+        "XRD664":
+          TEST00000: [ All ]
+    Author: Rirurin
+    Notes: To get the June 2014 Build running
+    Patch Version: 1.0
+    Patch:
+      - [ be32, 0x824ac0, 0x4e800020 ] # disable assertions
+      - [ be32, 0x10a44, 0x60000000 ] # don't run cldWantedCreate (p5Wanted freezes)
+      - [ be32, 0xc7a24, 0x48000638 ] # disable mission list update
+      # sndMotionSeFileLoadCompleted
+      - [ be32, 0x2d9928, 0x38600001 ] # always set to false
+      - [ be32, 0x2d992c, 0x4e800020 ]
+      # fldMainCheckOutdoor
+      - [ be32, 0x2f6ffc, 0x38600000 ] # always set to false
+      - [ be32, 0x2f7000, 0x4e800020 ]
+      # btlAICheckConditional
+      # bug description in p5_2014.c
+      # cond table
+      - [ be32, 0x6b221c, 0x38600001 ] # force return value to 1
+      - [ be32, 0x6b2220, 0x42800158 ] # branch to 0x6b2378
+      # cond unique table
+      - [ be32, 0x6b22d8, 0x38600001 ] # force return value to 1
+      - [ be32, 0x6b22dc, 0x4280009c ] # branch to 0x6b2378
+      # fldSoudnGetFieldFootStepType
+      - [ be32, 0x36c374, 0x38600000 ] # force return value to 0 (footstep table error)
+      - [ be32, 0x36c378, 0x4e800020 ]
+
+PPU-ad990ca2932c0b2a93776a9374c5e28dfaf5051d:
+  Mod SPRX:
+    Games:
+      "XRD664":
+        TEST00000: [ All ]
+    Author: Rirurin
+    Notes: Patch to inject custom C code
+    Patch Version: 1.0
+    Patch:
+      - [ be32, 0xdf5400, 0x26090058 ] # replace _sys_heap_delete_heap with sys_prx_load_module
+      - [ be32, 0xdf53dc, 0x9f18429d ] # replace _sys_heap_malloc with sys_prx_start_module
+      - [ byte, 0xdf56c2, 0 ]
+
+      # inject loader code into main
+      # bin2rpcs3patch begin shk_elf_loader_XRD664
+      - [ be32, 0x10250, 0x48a6bb91 ]
+      - [ be32, 0xa7bde0, 0xf821ff81 ]
+      - [ be32, 0xa7bde4, 0x7c0802a6 ]
+      - [ be32, 0xa7bde8, 0xf8010090 ]
+      - [ be32, 0xa7bdec, 0xf84100a8 ]
+      - [ be32, 0xa7bdf0, 0x3c6000a8 ]
+      - [ be32, 0xa7bdf4, 0x3863be40 ]
+      - [ be32, 0xa7bdf8, 0x38800000 ]
+      - [ be32, 0xa7bdfc, 0x38a00000 ]
+      - [ be32, 0xa7be00, 0x48378dc9 ]
+      - [ be32, 0xa7be04, 0x7c6307b4 ]
+      - [ be32, 0xa7be08, 0x38800000 ]
+      - [ be32, 0xa7be0c, 0x38a00000 ]
+      - [ be32, 0xa7be10, 0x38c10070 ]
+      - [ be32, 0xa7be14, 0x38e00000 ]
+      - [ be32, 0xa7be18, 0x39000000 ]
+      - [ be32, 0xa7be1c, 0x48378c8d ]
+      - [ be32, 0xa7be20, 0xe8010090 ]
+      - [ be32, 0xa7be24, 0xe84100a8 ]
+      - [ be32, 0xa7be28, 0x38210080 ]
+      - [ be32, 0xa7be2c, 0x7c0803a6 ]
+      - [ be32, 0xa7be30, 0x4e800020 ]
+      - [ be32, 0xa7be34, 0x60000000 ]
+      - [ be32, 0xa7be38, 0x60000000 ]
+      - [ be32, 0xa7be3c, 0x60000000 ]
+      - [ be32, 0xa7be40, 0x2f617070 ]
+      - [ be32, 0xa7be44, 0x5f686f6d ]
+      - [ be32, 0xa7be48, 0x652f6d6f ]
+      - [ be32, 0xa7be4c, 0x642e7370 ]
+      - [ be32, 0xa7be50, 0x72780000 ]
+      - [ be32, 0xa7be54, 0x0 ]
+      - [ be32, 0xa7be58, 0x0 ]
+      - [ be32, 0xa7be5c, 0x0 ]
+      # bin2rpcs3patch end
+
+      # bin2rpcs3patch begin shk_elf_inject_XRD664
+      - [ be32, 0xa7bddc, 0x480000dc ]
+      - [ be32, 0x3d8a80, 0x486a3440 ]
+      - [ be32, 0x2fd178, 0x4877ed50 ]
+      - [ be32, 0x89c390, 0x481dfb40 ]
+      - [ be32, 0x4af390, 0x485ccb48 ]
+      - [ be32, 0x7c4d0, 0x489ffa10 ]
+      - [ be32, 0xc12f0, 0x489babf8 ]
+      - [ be32, 0xc0c7c, 0x489bb274 ]
+      - [ be32, 0x2a5938, 0x487d65c0 ]
+      - [ be32, 0x6b2178, 0x483c9d88 ]
+      - [ be32, 0x7092f0, 0x48372c18 ]
+      - [ be32, 0x2bdff8, 0x487bdf18 ]
+      - [ be32, 0x2c4244, 0x487b7cd4 ]
+      - [ be32, 0x16d804, 0x4890e71c ]
+      - [ be32, 0xa7be60, 0xf821ff81 ]
+      - [ be32, 0xa7be64, 0xfbe10078 ]
+      - [ be32, 0xa7be68, 0x7fe802a6 ]
+      - [ be32, 0xa7be6c, 0xfbe10090 ]
+      - [ be32, 0xa7be70, 0x3fe00108 ]
+      - [ be32, 0xa7be74, 0x63ffa504 ]
+      - [ be32, 0xa7be78, 0x83ff0000 ]
+      - [ be32, 0xa7be7c, 0x7fe0fa14 ]
+      - [ be32, 0xa7be80, 0x83ff0000 ]
+      - [ be32, 0xa7be84, 0x801f0000 ]
+      - [ be32, 0xa7be88, 0x7c0903a6 ]
+      - [ be32, 0xa7be8c, 0xf8410028 ]
+      - [ be32, 0xa7be90, 0x805f0004 ]
+      - [ be32, 0xa7be94, 0x7c3f0b78 ]
+      - [ be32, 0xa7be98, 0x4e800421 ]
+      - [ be32, 0xa7be9c, 0xe8410028 ]
+      - [ be32, 0xa7bea0, 0xebe10000 ]
+      - [ be32, 0xa7bea4, 0xe81f0010 ]
+      - [ be32, 0xa7bea8, 0x7c0803a6 ]
+      - [ be32, 0xa7beac, 0x7fe1fb78 ]
+      - [ be32, 0xa7beb0, 0xebfffff8 ]
+      - [ be32, 0xa7beb4, 0x4e800020 ]
+      - [ be32, 0xa7beb8, 0x38000000 ]
+      - [ be32, 0xa7bebc, 0x4bffffa4 ]
+      - [ be32, 0xa7bec0, 0x38000004 ]
+      - [ be32, 0xa7bec4, 0x4bffff9c ]
+      - [ be32, 0xa7bec8, 0x38000008 ]
+      - [ be32, 0xa7becc, 0x4bffff94 ]
+      - [ be32, 0xa7bed0, 0x3800000c ]
+      - [ be32, 0xa7bed4, 0x4bffff8c ]
+      - [ be32, 0xa7bed8, 0x38000010 ]
+      - [ be32, 0xa7bedc, 0x4bffff84 ]
+      - [ be32, 0xa7bee0, 0x38000014 ]
+      - [ be32, 0xa7bee4, 0x4bffff7c ]
+      - [ be32, 0xa7bee8, 0x38000018 ]
+      - [ be32, 0xa7beec, 0x4bffff74 ]
+      - [ be32, 0xa7bef0, 0x3800001c ]
+      - [ be32, 0xa7bef4, 0x4bffff6c ]
+      - [ be32, 0xa7bef8, 0x38000020 ]
+      - [ be32, 0xa7befc, 0x4bffff64 ]
+      - [ be32, 0xa7bf00, 0x38000024 ]
+      - [ be32, 0xa7bf04, 0x4bffff5c ]
+      - [ be32, 0xa7bf08, 0x38000028 ]
+      - [ be32, 0xa7bf0c, 0x4bffff54 ]
+      - [ be32, 0xa7bf10, 0x3800002c ]
+      - [ be32, 0xa7bf14, 0x4bffff4c ]
+      - [ be32, 0xa7bf18, 0x38000030 ]
+      - [ be32, 0xa7bf1c, 0x4bffff44 ]
+      - [ be32, 0xa7bf20, 0x38000034 ]
+      - [ be32, 0xa7bf24, 0x4bffff3c ]
+      - [ be32, 0x108a504, 0xbadf00d ]
+      # bin2rpcs3patch end
