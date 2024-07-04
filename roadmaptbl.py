@@ -4,6 +4,41 @@ import struct
 
 # convert newer Persona 5 roadmap files to June 2014 compatible ones
 
+class RoadmapBin:
+    def __init__(self, entries):
+        self.entries = entries
+    def stream_read(file):
+        file.seek(0, 2)
+        filesize = file.tell()
+        file.seek(0, 0)
+        entries = []
+        for _ in range(int(filesize / 0x10)):
+            entries.append(struct.unpack("<4H2I", file.read(16)))
+        return RoadmapBin(entries)
+
+    def stream_write(self, file):
+        for i in self.entries:
+            rmap_out = struct.pack("<4HI", i[0], i[1], i[2], i[3], i[4]) # size 0xc
+            file.write(rmap_out)
+
+class TexpackBin:
+    def __init__(self, entries):
+        self.entries = entries
+
+    def stream_read(file):
+        file.seek(0, 2)
+        filesize = file.tell()
+        file.seek(0, 0)
+        entries = []
+        for _ in range(int(filesize / 0x68)):
+            entries.append(struct.unpack("<2HIf23I", file.read(0x68)))
+        return TexpackBin(entries)
+
+    def stream_write(self, file):
+        for i in self.entries:
+            rmap_out = struct.pack("<2HIfI", i[0], i[1], i[2], i[3], i[4])
+            file.write(rmap_out)
+
 def main():
     if len(sys.argv) < 2:
         print("Error: Missing filename")

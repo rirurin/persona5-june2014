@@ -120,8 +120,9 @@ class FtdList:
         # align to 0x10
         alignto(fhandle, FtdList.alignment())
 
-def serialize_empty_ftd(name, field_state_ftd):
-    femptyftd = open(os.path.join("test_resources", Ftd.file_name(name)), "wb")
+# def serialize_empty_ftd(name, field_state_ftd):
+def serialize_empty_ftd(name, field_state_ftd , ftd_dir_path):
+    femptyftd = open(os.path.join(ftd_dir_path, Ftd.file_name(name)), "wb")
     Ftd(0x10000).serialize(femptyftd)
 
 # these ftds were from a point in development where fldStateOnly was split into several lists
@@ -140,13 +141,7 @@ non_existant_ftds = {
     "fldWalkOnly": serialize_empty_ftd
 }
 
-def main():
-    # make sure directory is PS3_GAME/USRDIR
-    if len(sys.argv) < 2:
-        print("Missing root folder location")
-        return
-    
-    rootdir = sys.argv[1]
+def create_ftds(rootdir):
     ftd_dir = os.path.join(rootdir, "field", "ftd")
 
     if (os.path.exists(rootdir) == False):
@@ -167,9 +162,18 @@ def main():
     field_state_ftd: Ftd = Ftd.parse_from_filename(os.path.join(ftd_dir, Ftd.file_name(field_state)), field_state_schemas)
 
     for exist_ftd in non_existant_ftds:
-        non_existant_ftds[exist_ftd](exist_ftd, field_state_ftd)
-    
-    
+        if os.path.exists(os.path.join(ftd_dir, exist_ftd + ".ftd")):
+            print(exist_ftd + " already exists")
+        else:
+            print("make " + exist_ftd)
+            non_existant_ftds[exist_ftd](exist_ftd, field_state_ftd, ftd_dir)
 
+def main():
+    # make sure directory is PS3_GAME/USRDIR
+    if len(sys.argv) < 2:
+        print("Missing root folder location")
+        return
+    create_ftds(sys.argv[1])
+    
 if __name__ == "__main__":
     main()

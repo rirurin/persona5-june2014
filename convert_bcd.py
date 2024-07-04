@@ -1,44 +1,10 @@
+from alpha3_utils import *
 import io
 import os
 import sys
 import struct
 
 # See https://github.com/tge-was-taken/010-Editor-Templates/blob/master/templates/p5r_bcd.bt
-
-class StructExtensions:
-    # unpack from a file stream
-    def read(file, sig):
-        return struct.unpack(sig, file.read(struct.calcsize(sig)))
-    
-class Vector2:
-    def read(file):
-        return StructExtensions.read(file, "<2f")
-    def print(vec):
-        print("< " + str(vec[0]) + "," + str(vec[1]) + " >")
-    
-class Vector3:
-    def read(file):
-        return StructExtensions.read(file, "<3f")
-    def print(vec):
-        print("< " + str(vec[0]) + "," + str(vec[1]) + "," + str(vec[2]) + " >")
-    
-class Vector4:
-    def read(file):
-        return StructExtensions.read(file, "<4f")
-    def print(vec):
-        print("< " + str(vec[0]) + "," + str(vec[1]) + "," + str(vec[2]) + "," + str(vec[3]) + " >")
-
-class Matrix3x4:
-    def read(file):
-        return StructExtensions.read(file, "<12f")
-    
-class ByteColorRGB:
-    def read(file):
-        return StructExtensions.read(file, "<3B")
-    
-class ByteColorRGBA:
-    def read(file):
-        return StructExtensions.read(file, "<4B")
 
 class NonZeroedString:
     def read(file):
