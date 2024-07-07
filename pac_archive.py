@@ -6,6 +6,8 @@ import sys
 
 # TYPE 1
 class PacFile:
+    name: str
+    data: bytes
     def __init__(self, name, data):
         self.name = name
         self.data = data
@@ -34,6 +36,16 @@ class PacArchive:
             files[new_file.name] = new_file
         file.close()
         return PacArchive(files)
+    def stream_write(self, file: io.BytesIO):
+        file.write(struct.pack(">I", self.files.__len__()))
+        for f in self.files.values():
+            bname = bytes(f.name, "ASCII")
+            file.write(bname)
+            file.write(bytes(32 - bname.__len__()))
+            file.write(struct.pack(">I", len(f.data)))
+            file.write(f.data)
+        file.close()
+            
     
 # TYPE 2
 class PakFile:

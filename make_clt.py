@@ -244,11 +244,23 @@ def make_clt(root_dir):
             new_file.close()
         file.close()
 
+def list_clt(root_dir):
+    fldnpc_dir = FileExtensions.checked_dir(root_dir, "field/npc")
+    for filename in [
+         os.path.join(parts[0], file) 
+         for parts in os.walk(fldnpc_dir) if len(parts[2]) != 0 
+         for file in parts[2] if file.lower().endswith(".clt") and file.lower().startswith("f") and file.lower().find("new") == -1
+         ]:
+        file = open(filename, "rb")
+        version, = StructExtensions.read(file, ">I")
+        print(os.path.basename(filename) + ": " + hex(version))
+
+
 def main():
     if len(sys.argv) < 2:
         print("Error: Missing root directory (should point to PS3_GAME/USRDIR)")
         return
-    make_clt(FileExtensions.checked_dir(sys.argv[1], None))
+    list_clt(FileExtensions.checked_dir(sys.argv[1], None))
     
 
 if __name__ == "__main__":

@@ -1,7 +1,9 @@
 from alpha3_utils import *
 from roadmaptbl import *
 from pac_archive import *
+import make_cmpequipparam
 import make_clt
+import make_sht
 import rename_envs
 
 import sys
@@ -11,7 +13,11 @@ def place_files(root_dir):
     rename_envs.rename_files(root_dir)
     fldpanel_dir = FileExtensions.checked_dir(root_dir, "field/panel")
     # create field/panel/p5Wanted_01.spd
-    # TODO
+    # 
+    FileExtensions.copy_file(
+        os.path.join(fldpanel_dir, "p5minimap_01.spd"),
+        os.path.join(fldpanel_dir, "p5Wanted_01.spd")
+    )
     # Create field/party/partyXX.bf for members 02 through 09
     # Find a better way to do this? Currently this just copies member.bf
     fldparty_dir = FileExtensions.checked_dir(root_dir, "field/party")
@@ -24,6 +30,18 @@ def place_files(root_dir):
     # field/panel/check_test.spd
     # field/panel/PS3Pad_test.spd
     # field/panel/observation.spd
+    FileExtensions.copy_file(
+        os.path.join(fldpanel_dir, "p5_keyhelp.spd"),
+        os.path.join(fldpanel_dir, "check_test.spd")
+    )
+    FileExtensions.copy_file(
+        os.path.join(fldpanel_dir, "p5_keyhelp.spd"),
+        os.path.join(fldpanel_dir, "PS3Pad_test.spd")
+    )
+    FileExtensions.copy_file(
+        os.path.join(fldpanel_dir, "p5_keyhelp.spd"),
+        os.path.join(fldpanel_dir, "observation.spd")
+    )
 
     # these are just blank files for now, if we find a good substitute later it can be replaced
     FileExtensions.copy_file(
@@ -39,8 +57,10 @@ def place_files(root_dir):
         os.path.join(fldpanel_dir, "telephone.dds")
     )
 
-    # fix field npc/crowd
+    # fix field npc/crowd (CLT files)
     make_clt.make_clt(root_dir)
+    # fix sound hit (SHT)
+    make_sht.make_clt(root_dir)
     # copy phantom thief outfit 051_00 to 051_01
     for i in range(1, 10):
         idmajor = str(i).zfill(4)
@@ -84,18 +104,18 @@ def place_files(root_dir):
             os.path.join(camp_dir, os.path.basename(file))
         )
 
-    # cmpEquipParam.ctd
-    # FileExtensions.checked_dir(None)
-    # Ftd(0x10000)
-    # stats menu
-    # this is from P4G, we'll have to rename it ourselves
-    # TODO
+    # cmpEquipParam.ctd (for stats menu)
+    make_cmpequipparam.create_status_files(root_dir)
+    # request menu:
+    make_cmpequipparam.create_requests_files(root_dir)
 
 def main():
     if len(sys.argv) < 2:
-        print("Error: Missing root directory (should point to PS3_GAME/USRDIR)")
+        print("Error: Missing root directory (should point to directory containing EBOOT.bin)")
         return
-    place_files(FileExtensions.checked_dir(sys.argv[1], None))
+    root = sys.argv[1]
+    file_root = FileExtensions.checked_dir(root, "PS3_GAME/USRDIR")
+    place_files(FileExtensions.checked_dir(file_root, None))
     
 
 if __name__ == "__main__":

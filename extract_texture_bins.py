@@ -21,12 +21,13 @@ def extract_texture_bins(root_dir, output_dir):
 
 def main():
     if len(sys.argv) < 2:
-        print("Error: Missing root directory (should point to PS3_GAME/USRDIR)")
+        print("Error: Missing root directory (should point to directory containing your EBOOT)")
         return
     if len(sys.argv) < 3:
         print("Error: Missing texture bin output directory")
         return
-    extract_texture_bins(FileExtensions.checked_dir(sys.argv[1], None), FileExtensions.checked_dir(sys.argv[2], None))
+    file_root = FileExtensions.checked_dir(sys.argv[1], "PS3_GAME/USRDIR")
+    extract_texture_bins(file_root, FileExtensions.checked_dir(sys.argv[2], None))
     
 
 if __name__ == "__main__":
